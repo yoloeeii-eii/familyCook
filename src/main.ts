@@ -3,16 +3,17 @@ import './assets/main.css'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import Antd from 'ant-design-vue';
-import 'ant-design-vue/dist/reset.css';
-
+import 'ant-design-vue/dist/reset.css';  // Antd 重置样式（建议保留）
 
 import App from './App.vue'
 import router from './router'
 
 const app = createApp(App)
 
-app.use(createPinia())
-app.use(router)
-app.use(Antd).mount('#app');
+// 1. 注册插件（顺序无关，但建议按依赖顺序）
+app.use(createPinia())       // 状态管理
+app.use(router)              // 路由
+app.use(Antd)                // UI 组件库
 
+// 2. 最后挂载应用（仅需一次！）
 app.mount('#app')
