@@ -60,7 +60,8 @@ import pop from '@/components/pop.vue'
 /* 导航菜单 */
 .nav-menu {
   display: flex;
-  gap: 24px;
+  gap: 30px;
+  justify-content: space-between;
 }
 
 .nav-menu a {
@@ -89,6 +90,7 @@ import pop from '@/components/pop.vue'
   color: #999;
   font-size: 14px;
   display: flex;
+  justify-content: space-between;
 }
 
 </style>
