@@ -33,9 +33,9 @@
   </a-space>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import pop from '@/components/pop.vue'
+import pop from '@/views/pop.vue'
 
 
 

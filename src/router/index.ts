@@ -18,6 +18,11 @@ const router = createRouter({
       name: 'family',
       component: () => import('@/views/family.vue'),
     },
+    {
+      path: '/chuangjiancaipu',
+      name: 'chuangjiancaipu',
+      component: () => import('@/views/chuangjiancaipu.vue'),
+    }
   ],
 })
 

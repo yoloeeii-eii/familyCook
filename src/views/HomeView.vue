@@ -10,8 +10,11 @@
   <!-- <div>搜索栏</div> -->
   <div class="contain">
     <div>
-      <input type="text" placeholder="搜索菜谱..." />
-      <button><SearchOutlined />搜索</button>
+      <a-input-search
+      placeholder="搜索菜谱..."
+      style="width: 200px"
+      @search="onSearch"
+    />
     </div>
     <!-- <div>信息弹窗</div> -->
     <div>
@@ -77,7 +80,9 @@
 </template>
 
 <script setup>
-
+function onSearch() {
+  console.log('搜索内容：');
+}
 
 </script>
 
