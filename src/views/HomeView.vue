@@ -50,7 +50,7 @@
       </div>
       </div>
     </div>
-    
+
     <div>
       <h2>最新上传</h2>
       <div class="newup">
