@@ -20,7 +20,7 @@
           </RouterLink>
           <RouterLink to="/recipes">
             <FileSearchOutlined />
-              <div>菜谱</div>
+            <div>菜谱</div>
           </RouterLink>
           <RouterLink to="/family">
             <CloudOutlined />
@@ -36,16 +36,13 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import pop from '@/views/pop.vue'
-
-
-
 </script>
-
 
 <style scoped>
 /* 外层 wrapper：占满宽度 */
 .app-wrapper {
-  width: 100%;
+  width: 414px;
+  height: 900px;
 }
 
 /* Header 样式 */
@@ -92,5 +89,4 @@ import pop from '@/views/pop.vue'
   display: flex;
   justify-content: space-between;
 }
-
 </style>
