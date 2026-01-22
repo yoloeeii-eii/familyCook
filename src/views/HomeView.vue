@@ -54,7 +54,7 @@
 </template>
 
 <script setup lang="ts">
-import { mockPopularHomeCookedDishes, mockRecentlyUploaded } from '.././assets/mockData/homeView'
+import { mockPopularHomeCookedDishes, mockRecentlyUploaded } from '../mockData/homeView'
 import RecipeCard from '../components/RecipeCard.vue'
 import DishCarousel from '../components/DishCarousel.vue'
 const popularHomeCookedDishes = mockPopularHomeCookedDishes
