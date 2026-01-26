@@ -96,7 +96,8 @@ const handleCancel = () => {
 
 <style scoped>
 .addIcon {
-  font-size: 50px;
+  font-size: 40px;
+  margin-left: 10px;
   color: #fcfdf7;
   cursor: pointer;
 }

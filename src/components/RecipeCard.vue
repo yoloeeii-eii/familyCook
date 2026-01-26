@@ -19,7 +19,7 @@
             <a-avatar :src="authorAvatar" :size="24" />
             <span class="truncate">{{ author }}</span>
             <span class="text-gray-300">·</span>
-            <span class="text-orange-500 shrink-0">{{ likes }} 赞</span>
+            <span class="text-orange-500 shrink-0">{{ like_count }} 赞</span>
           </div>
 
           <!-- 操作 -->
@@ -39,7 +39,7 @@ defineProps<{
   cover: string
   author: string
   authorAvatar: string
-  likes: number
+  like_count: number
 }>()
 
 defineEmits<{

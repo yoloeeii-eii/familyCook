@@ -3,47 +3,47 @@ export const mockPopularHomeCookedDishes = [
   {
     id: 1,
     title: '红烧肉',
-    picture: '/cookPic/hongshaorou.jpg',
+    cover_image: '/cookPic/hongshaorou.jpg',
   },
   {
     id: 2,
     title: '鱼香肉丝',
-    picture: '/cookPic/yuxiangrousi.jpg',
+    cover_image: '/cookPic/yuxiangrousi.jpg',
   },
   {
     id: 3,
     title: '小炒肉',
-    picture: '/cookPic/xiaochaorou.jpg',
+    cover_image: '/cookPic/xiaochaorou.jpg',
   },
   {
     id: 4,
     title: '红烧肉',
-    picture: '/cookPic/hongshaorou.jpg',
+    cover_image: '/cookPic/hongshaorou.jpg',
   },
   {
     id: 5,
     title: '鱼香肉丝',
-    picture: '/cookPic/yuxiangrousi.jpg',
+    cover_image: '/cookPic/yuxiangrousi.jpg',
   },
   {
     id: 6,
     title: '小炒肉',
-    picture: '/cookPic/xiaochaorou.jpg',
+    cover_image: '/cookPic/xiaochaorou.jpg',
   },
   {
     id: 7,
     title: '红烧肉',
-    picture: '/cookPic/hongshaorou.jpg',
+    cover_image: '/cookPic/hongshaorou.jpg',
   },
   {
     id: 8,
     title: '鱼香肉丝',
-    picture: '/cookPic/yuxiangrousi.jpg',
+    cover_image: '/cookPic/yuxiangrousi.jpg',
   },
   {
     id: 9,
     title: '小炒肉',
-    picture: '/cookPic/xiaochaorou.jpg',
+    cover_image: '/cookPic/xiaochaorou.jpg',
   },
 ]
 
@@ -51,29 +51,29 @@ export const mockPopularHomeCookedDishes = [
 export const mockRecentlyUploaded = [
   {
     id: 1,
-    cookPicture: '/cookPic/kelejichi.jpg',
+    cover_image: '/cookPic/kelejichi.jpg',
     title: '可乐鸡翅',
-    profilePicture:
+    avatar:
       'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&auto=format',
-    username: '表哥',
-    likes: 12,
+    nickname: '表哥',
+    like_count: 12,
   },
   {
     id: 2,
-    cookPicture: '/cookPic/chaobaicai.jpg',
+    cover_image: '/cookPic/chaobaicai.jpg',
     title: '炒白菜',
-    profilePicture:
+    avatar:
       'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&auto=format',
-    username: '妈妈',
-    likes: 8,
+    nickname: '妈妈',
+    like_count: 8,
   },
   {
     id: 3,
-    cookPicture: '/cookPic/fanqiechaodan.jpg',
+    cover_image: '/cookPic/fanqiechaodan.jpg',
     title: '番茄炒蛋',
-    profilePicture:
+    avatar:
       'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&auto=format',
-    username: '哥哥',
-    likes: 15,
+    nickname: '哥哥',
+    like_count: 15,
   },
 ]

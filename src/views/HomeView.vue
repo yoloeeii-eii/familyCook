@@ -7,7 +7,7 @@
     <!-- 信息提醒 -->
     <div class="flex justify-center p-2">
       <a-alert
-        message="妈妈更新了「糖醋排骨」"
+        :message="healthText || '服务运行正常'"
         type="info"
         banner
         show-icon
@@ -38,13 +38,13 @@
       </div>
       <span class="gap-2 flex flex-wrap">
         <RecipeCard
-          v-for="item in recentlyUploaded"
+          v-for="item in recipeList"
           :key="item.id"
           :title="item.title"
-          :cover="item.cookPicture"
-          :author="item.username"
-          :authorAvatar="item.profilePicture"
-          :likes="item.likes"
+          :cover="item.coverImage"
+          :author="item.author.nickname"
+          :authorAvatar="item.author.avatar"
+          :like_count="item.likeCount"
           @view="goDetail(item.id)"
           @favorite="toggleFavorite(item.id)"
         />
@@ -54,17 +54,48 @@
 </template>
 
 <script setup lang="ts">
-import { mockPopularHomeCookedDishes, mockRecentlyUploaded } from '../mockData/homeView'
+import router from '@/router'
+
+import { ref, onMounted } from 'vue'
+import { FireOutlined } from '@ant-design/icons-vue'
+import { getHealth, getRecipeList, type Recipe } from '@/api/recipe'
 import RecipeCard from '../components/RecipeCard.vue'
 import DishCarousel from '../components/DishCarousel.vue'
-const popularHomeCookedDishes = mockPopularHomeCookedDishes
-const recentlyUploaded = mockRecentlyUploaded
+
+// 顶部健康检查提示
+const healthText = ref<string>('')
+
+// 轮播组件需要 { id, title, cover_image }
+const popularHomeCookedDishes = ref<Array<Recipe>>([])
+
+const recipeList = ref<Array<Recipe>>([])
+
+onMounted(async () => {
+  // 健康检查
+  try {
+    const health = await getHealth()
+    healthText.value = health
+  } catch (e) {
+    console.error(e)
+    // 静默失败，提示由全局拦截器处理
+  }
+  try {
+    const res = await getRecipeList()
+    popularHomeCookedDishes.value = res
+    recipeList.value = res
+  } catch (e) {
+    console.error(e)
+    // 静默失败，提示由全局拦截器处理
+  }
+})
 
 function onSearch(value: string) {
   console.log('搜索内容：', value)
 }
 function goDetail(id: number) {
-  console.log('去详情页', id)
+  console.log('查看详情', id)
+  // 跳转
+  router.push(`/recipes/${id}`)
 }
 
 function toggleFavorite(id: number) {

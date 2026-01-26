@@ -9,7 +9,7 @@
         >
           <div class="relative h-[180px] group cursor-pointer">
             <img
-              :src="dish.picture"
+              :src="dish.coverImage"
               class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
             <div class="absolute w-[164px] h-[50px] bottom-0 left-0 right-0 bg-black/40">
@@ -28,7 +28,7 @@
 interface Dish {
   id: number
   title: string
-  picture: string
+  coverImage: string
 }
 
 defineProps<{
