@@ -1,330 +1,204 @@
 <template>
-  <div class="recipe-form">
-    <!-- 上传封面 -->
-    <div class="form-section">
-      <div class="section-title">封面图片</div>
-      <div class="upload-area">
-        <div class="upload-placeholder">
-          <div class="upload-icon">📷</div>
-          <div class="upload-text">点击上传成品图</div>
-          <div class="upload-hint">建议尺寸 800×600px，JPG/PNG格式</div>
+  <div class="max-h-[70vh] overflow-y-auto px-1 space-y-6">
+    <section class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 space-y-3">
+      <div class="text-lg font-semibold text-gray-900">封面图片</div>
+      <a-upload
+        :before-upload="handleCoverUpload"
+        :show-upload-list="false"
+        accept="image/*"
+        class="w-full flex items-center justify-center"
+      >
+        <div
+          class="w-full h-48 border-2 border-dashed border-gray-200 rounded-xl flex flex-col items-center justify-center gap-2 bg-gradient-to-br from-gray-50 to-gray-100"
+        >
+          <template v-if="coverPreview">
+            <img :src="coverPreview" alt="封面预览" class="w-full h-full object-cover rounded-xl" />
+          </template>
+          <template v-else>
+            <div class="text-3xl opacity-70">📷</div>
+            <div class="text-base font-medium text-gray-700">点击上传成品图</div>
+            <div class="text-xs text-gray-400">建议尺寸 800x600px，JPG/PNG格式</div>
+          </template>
         </div>
-      </div>
-    </div>
+      </a-upload>
+    </section>
 
-    <!-- 基本信息 -->
-    <div class="form-section">
-      <div class="section-title">基本信息</div>
-      <div class="form-row">
-        <a-input 
-          v-model:value="value1" 
-          placeholder="输入菜谱标题" 
-          allow-clear 
-          size="large"
-          class="form-input"
-        />
-      </div>
-      <div class="form-row">
-        <a-textarea 
-          v-model:value="value2" 
-          placeholder="输入菜谱简介或心得" 
+    <section class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 space-y-4">
+      <div class="text-lg font-semibold text-gray-900">基本信息</div>
+      <a-input
+        v-model:value="form.title"
+        placeholder="输入菜谱标题"
+        allow-clear
+        size="large"
+        class="w-full"
+      />
+      <a-textarea
+        v-model:value="form.intro"
+        placeholder="输入菜谱简介或心得"
+        allow-clear
+        :rows="4"
+        class="w-full"
+      />
+      <a-textarea
+        v-model:value="form.description"
+        placeholder="详细描述这道菜的做法与心得"
+        allow-clear
+        :rows="5"
+        class="w-full"
+      />
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <a-input
+          v-model:value="form.cookingTime"
+          placeholder="烹饪时间（例如：40分钟）"
           allow-clear
-          :rows="4"
-          class="form-textarea"
         />
+        <span class="flex items-center gap-2">
+          <span>谁能看见:</span>
+          <a-radio-group v-model:value="form.visibility" class="flex gap-4">
+            <a-radio value="public">公开</a-radio>
+            <a-radio value="family">仅家庭</a-radio>
+          </a-radio-group>
+        </span>
+        <div class="space-y-2">
+          <div class="text-sm text-gray-600">标签（逗号分隔）</div>
+          <a-input v-model:value="tagsInput" placeholder="下饭菜, 川菜, 辣" allow-clear />
+        </div>
       </div>
-    </div>
+    </section>
 
-    <!-- 食材部分 -->
-    <div class="form-section">
-      <div class="section-header">
-        <div class="section-title">食材清单</div>
-        <a-button type="primary" ghost class="add-button">添加食材</a-button>
+    <section class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 space-y-4">
+      <div class="flex items-center justify-between">
+        <div class="text-lg font-semibold text-gray-900">食材清单</div>
+        <a-button type="primary" ghost class="rounded-full" @click="addIngredient"
+          >添加食材</a-button
+        >
       </div>
-      <div class="ingredients-list">
-        <div class="ingredient-item">
-          <div class="ingredient-index">1.</div>
-          <div class="ingredient-fields">
-            <a-input v-model:value="value" placeholder="用料" class="field-input" />
-            <a-input v-model:value.lazy="value1" placeholder="用量" class="field-input" />
+      <div class="space-y-3">
+        <div
+          v-for="(item, idx) in form.ingredients"
+          :key="idx"
+          class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-100"
+        >
+          <div class="text-orange-500 font-semibold w-6">{{ idx + 1 }}.</div>
+          <a-input v-model:value="item.name" placeholder="用料" class="flex-1" allow-clear />
+          <a-input v-model:value="item.quantity" placeholder="用量" class="flex-1" allow-clear />
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 space-y-4">
+      <div class="flex items-center justify-between">
+        <div class="text-lg font-semibold text-gray-900">做法步骤</div>
+        <a-button type="primary" ghost class="rounded-full" @click="addStep">添加步骤</a-button>
+      </div>
+      <div class="space-y-4">
+        <div
+          v-for="(step, idx) in form.steps"
+          :key="idx"
+          class="p-4 bg-gray-50 rounded-lg border border-gray-100 space-y-2"
+        >
+          <div class="flex items-center gap-2 text-gray-800 font-semibold">
+            <span class="inline-block w-2 h-2 rounded-full bg-green-500"></span>
+            步骤 {{ step.step || idx + 1 }}
           </div>
-        </div>
-        <div class="ingredient-item">
-          <div class="ingredient-index">2.</div>
-          <div class="ingredient-fields">
-            <a-input v-model:value="value" placeholder="用料" class="field-input" />
-            <a-input v-model:value.lazy="value1" placeholder="用量" class="field-input" />
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 做法步骤 -->
-    <div class="form-section">
-      <div class="section-header">
-        <div class="section-title">做法步骤</div>
-        <a-button type="primary" ghost class="add-button">添加步骤</a-button>
-      </div>
-      <div class="steps-list">
-        <div class="step-item">
-          <div class="step-header">步骤 1</div>
-          <a-input v-model:value="value" placeholder="描述操作步骤" class="step-input" />
-        </div>
-        <div class="step-item">
-          <div class="step-header">步骤 2</div>
-          <a-input v-model:value.lazy="value1" placeholder="描述操作步骤" class="step-input" />
+          <a-input
+            v-model:value="step.description"
+            placeholder="描述操作步骤"
+            class="w-full"
+            allow-clear
+          />
+          <div class="text-sm text-gray-400">可在此处上传步骤图片（预留）</div>
         </div>
       </div>
-    </div>
-
-    <!-- 标签和可见性 -->
-    <div class="form-section">
-      <div class="section-title">更多设置</div>
-      <div class="settings-grid">
-        <div class="setting-item">
-          <div class="setting-label">标签</div>
-          <a-input v-model:value="value" placeholder="输入标签，用逗号分隔" />
-        </div>
-        <div class="setting-item">
-          <div class="setting-label">谁可以看</div>
-          <a-input v-model:value.lazy="value1" placeholder="选择可见范围" />
-        </div>
-      </div>
-    </div>
+    </section>
   </div>
 </template>
 
-<script>
-export default {
-  
-}
-</script>
+<script setup lang="ts">
+import { reactive, ref, watch } from 'vue'
+import { message } from 'ant-design-vue'
+import type { Recipe } from '@/api/recipe'
 
-<style scoped>
-.recipe-form {
-  padding: 0 4px;
-  max-height: 70vh;
-  overflow-y: auto;
-}
+const emit = defineEmits<{ (e: 'update', value: Recipe): void }>()
 
-/* 表单区域 */
-.form-section {
-  background: white;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
-  border: 1px solid #f0f0f0;
-  transition: box-shadow 0.2s;
-}
+const form = reactive<Recipe>({
+  id: 0,
+  title: '',
+  intro: '',
+  description: '',
+  coverImage: '/cookPic/placeholder.jpg',
+  cookingTime: '',
+  visibility: 'public',
+  publishTime: new Date().toISOString(),
+  updateTime: new Date().toISOString(),
+  viewCount: 0,
+  likeCount: 0,
+  collectCount: 0,
+  commentCount: 0,
+  ingredients: [
+    { name: '', quantity: '' },
+    { name: '', quantity: '' },
+  ],
+  steps: [
+    { step: 1, description: '', image: null },
+    { step: 2, description: '', image: null },
+  ],
+  tags: [],
+})
 
-.form-section:hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-}
+const tagsInput = ref('')
+const coverPreview = ref<string>('')
 
-/* 标题样式 */
-.section-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: #1f1f1f;
-  margin-bottom: 20px;
-  padding-bottom: 12px;
-  border-bottom: 2px solid #f0f0f0;
-  position: relative;
-}
-
-.section-title::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 60px;
-  height: 2px;
-  background: #ff7a45;
+const addIngredient = () => {
+  form.ingredients.push({ name: '', quantity: '' })
 }
 
-/* 上传区域 */
-.upload-area {
-  width: 100%;
-  height: 200px;
-  border: 3px dashed #e8e8e8;
-  border-radius: 12px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 20px;
-  cursor: pointer;
-  transition: all 0.3s;
-  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+const addStep = () => {
+  const nextStep = (form.steps[form.steps.length - 1]?.step || form.steps.length) + 1
+  form.steps.push({ step: nextStep, description: '', image: null })
 }
 
-.upload-area:hover {
-  border-color: #1890ff;
-  background: linear-gradient(135deg, #f0f9ff 0%, #e6f7ff 100%);
-  transform: translateY(-2px);
-}
+const handleCoverUpload = async (file: File) => {
+  // 无上传接口：转 base64 直塞 coverImage 给后端
+  const toBase64 = (f: File) =>
+    new Promise<string>((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = () => resolve(reader.result as string)
+      reader.onerror = reject
+      reader.readAsDataURL(f)
+    })
 
-.upload-placeholder {
-  text-align: center;
-  color: #8c8c8c;
-}
-
-.upload-icon {
-  font-size: 48px;
-  margin-bottom: 12px;
-  opacity: 0.7;
-}
-
-.upload-text {
-  font-size: 16px;
-  font-weight: 500;
-  color: #595959;
-  margin-bottom: 8px;
-}
-
-.upload-hint {
-  font-size: 12px;
-  color: #bfbfbf;
-}
-
-/* 表单行间距 */
-.form-row {
-  margin-bottom: 20px;
-}
-
-.form-row:last-child {
-  margin-bottom: 0;
-}
-
-.form-input, .form-textarea {
-  width: 100%;
-}
-
-/* 食材部分样式 */
-.section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.add-button {
-  border-radius: 20px;
-  padding: 0 20px;
-  height: 36px;
-  font-weight: 500;
-}
-
-.ingredients-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.ingredient-item {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 12px;
-  background: #fafafa;
-  border-radius: 8px;
-  border-left: 4px solid #ff7a45;
-}
-
-.ingredient-index {
-  font-weight: 600;
-  color: #ff7a45;
-  min-width: 24px;
-  font-size: 16px;
-}
-
-.ingredient-fields {
-  display: flex;
-  gap: 12px;
-  flex: 1;
-}
-
-.field-input {
-  flex: 1;
-}
-
-/* 步骤样式 */
-.steps-list {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.step-item {
-  padding: 16px;
-  background: #fafafa;
-  border-radius: 8px;
-  border: 1px solid #f0f0f0;
-}
-
-.step-header {
-  font-weight: 600;
-  color: #1f1f1f;
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.step-header::before {
-  content: '';
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  background: #52c41a;
-  border-radius: 50%;
-}
-
-.step-input {
-  width: 100%;
-}
-
-/* 设置区域 */
-.settings-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-
-@media (max-width: 768px) {
-  .settings-grid {
-    grid-template-columns: 1fr;
+  try {
+    const base64 = await toBase64(file)
+    form.coverImage = base64
+    coverPreview.value = base64
+    message.success('封面已添加（base64）')
+  } catch (e) {
+    message.error('封面读取失败')
   }
+
+  return false // 阻止 Upload 默认上传
 }
 
-.setting-item {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
+watch(
+  () => tagsInput.value,
+  (val) => {
+    form.tags = val
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean)
+  },
+)
+watch(
+  form,
+  (val) => {
+    emit('update', JSON.parse(JSON.stringify(val)))
+  },
+  { deep: true },
+)
 
-.setting-label {
-  font-weight: 500;
-  color: #595959;
-  font-size: 14px;
-}
+const getValue = () => JSON.parse(JSON.stringify(form)) as Recipe
+const validate = async () => true
 
-/* 滚动条美化 */
-.recipe-form::-webkit-scrollbar {
-  width: 8px;
-}
-
-.recipe-form::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 4px;
-}
-
-.recipe-form::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
-  border-radius: 4px;
-}
-
-.recipe-form::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
-}
-</style>
+defineExpose({ getValue, validate })
+</script>

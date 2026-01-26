@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="fixed right-3 bottom-1 z-50">
     <!-- 下拉菜单 -->
-    <a-dropdown>
+    <a-dropdown placement="topRight" :overlayStyle="{ marginBottom: '8px' }" :trigger="['click']">
       <a class="ant-dropdown-link" @click.prevent>
         <PlusCircleOutlined class="addIcon" />
       </a>
@@ -45,6 +45,7 @@
 import { ref } from 'vue'
 import chuangjiancaipu from '@/components/chuangjiancaipu.vue'
 import fabujiatingdongtai from '@/components/fabujiatingdongtai.vue'
+import { postRecipe } from '@/api/recipe'
 
 // 弹窗显示状态
 const showCaipu = ref(false)
@@ -66,13 +67,22 @@ const showDongtaiModal = () => {
 
 // 处理菜谱提交
 const handleCaipuOk = async () => {
-  if (caipuForm.value) {
-    const isValid = await caipuForm.value.validate() // 假设组件有 validate 方法
-    if (isValid) {
-      // 提交逻辑
-      message.success('菜谱发布成功')
-      showCaipu.value = false
-    }
+  const formApi = caipuForm.value
+  if (!formApi || typeof formApi.getValue !== 'function') {
+    message.error('表单不可用')
+    return
+  }
+
+  const payload = formApi.getValue()
+  const { ...data } = payload || {}
+
+  try {
+    await postRecipe(data)
+    message.success('菜谱发布成功')
+    showCaipu.value = false
+  } catch (e) {
+    console.error(e)
+    message.error('菜谱发布失败')
   }
 }
 

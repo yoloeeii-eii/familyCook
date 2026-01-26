@@ -65,7 +65,7 @@ import DishCarousel from '../components/DishCarousel.vue'
 // 顶部健康检查提示
 const healthText = ref<string>('')
 
-// 轮播组件需要 { id, title, cover_image }
+// 轮播组件需要 { id, title, coverImage }
 const popularHomeCookedDishes = ref<Array<Recipe>>([])
 
 const recipeList = ref<Array<Recipe>>([])

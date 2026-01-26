@@ -24,9 +24,9 @@ export interface Recipe {
   description: string
   coverImage: string
   cookingTime: string
-  visibility: 'public' | 'private' | string
-  publishTime: string
-  updateTime: string
+  visibility: 'public' | 'family' | string
+  publishTime?: string
+  updateTime?: string
   viewCount: number
   likeCount: number
   collectCount: number
@@ -47,4 +47,16 @@ export function getRecipeById(id: number): Promise<Recipe> {
 
 export function getRecipeList(): Promise<Recipe[]> {
   return request.get<Recipe[]>('/recipes')
+}
+
+export function postRecipe(data: Omit<Recipe, 'id'>): Promise<Recipe> {
+  return request.post<Recipe>('/recipes', data)
+}
+
+export function putRecipe(id: number, data: Omit<Recipe, 'id'>): Promise<Recipe> {
+  return request.put<Recipe>(`/recipes/${id}`, data)
+}
+
+export function deleteRecipe(id: number): Promise<void> {
+  return request.delete<void>(`/recipes/${id}`)
 }
