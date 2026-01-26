@@ -72,17 +72,4 @@ function toggleFavorite(id: number) {
 }
 </script>
 
-<style scoped>
-/* For demo */
-:deep(.slick-slide) {
-  text-align: center;
-  height: 150px;
-  line-height: 160px;
-  background: #364d79;
-  overflow: hidden;
-}
-
-:deep(.slick-slide h3) {
-  color: #fff;
-}
-</style>
+<style scoped></style>
